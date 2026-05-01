@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بحث إجرائي تقصي أسباب التدني — ثانوية ١٣٤</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #111827;
+  --navy: #0F2744;
+  --blue: #1D4ED8;
+  --sky: #2563EB;
+  --teal: #0891B2;
+  --mint: #059669;
+  --amber: #D97706;
+  --rose: #DC2626;
+  --violet: #7C3AED;
+  --slate: #475569;
+  --mist: #F1F5F9;
+  --white: #FFFFFF;
+  --gold: #F59E0B;
+  --step1: #1D4ED8;
+  --step2: #0891B2;
+  --step3: #7C3AED;
+  --step4: #D97706;
+  --step5: #059669;
+  --step6: #DC2626;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  background: #0A0F1E;
+  color: var(--white);
+  height: 100vh;
+  overflow: hidden;
+  direction: rtl;
+  user-select: none;
+}
+
+input, textarea, select { user-select: text; -webkit-user-select: text; }
+.form-box { user-select: text; -webkit-user-select: text; }
+
+/* ── PROGRESS ── */
+#pgbar { position:fixed; top:0; left:0; right:0; height:2px; background:rgba(255,255,255,0.06); z-index:300; }
+#pgfill { height:100%; background:linear-gradient(90deg,var(--gold),#FB923C); transition:width .5s ease; }
+
+/* ── TOPBAR ── */
+#topbar {
+  position:fixed; top:2px; left:0; right:0; height:54px;
+  background:rgba(10,15,30,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 24px; z-index:200;
+}
+.tb-brand { font-size:12px; font-weight:700; color:var(--gold); letter-spacing:.04em; }
+.tb-right { display:flex; align-items:center; gap:10px; }
+.tb-ctr { font-size:12px; color:rgba(255,255,255,0.4); min-width:52px; text-align:center; }
+.tb-btn {
+  width:32px; height:32px; border-radius:8px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  color:white; font-size:15px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .2s;
+}
+.tb-btn:hover { background:rgba(245,158,11,0.18); border-color:var(--gold); }
+.tb-btn:disabled { opacity:.25; cursor:not-allowed; }
+#mapbtn {
+  font-size:11px; font-family:inherit; color:rgba(255,255,255,0.7);
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  padding:5px 12px; border-radius:8px; cursor:pointer;
+  transition:all .2s;
+}
+#mapbtn:hover { border-color:var(--gold); color:var(--gold); }
+
+#dlbtn {
+  font-size:11px; font-family:inherit; color:white;
+  background:linear-gradient(135deg,var(--violet),var(--blue));
+  border:none; padding:6px 14px; border-radius:8px; cursor:pointer;
+  font-weight:700; transition:all .2s; white-space:nowrap;
+}
+#dlbtn:hover { opacity:.85; transform:scale(1.03); }
+
+/* ── ROADMAP PANEL ── */
+#roadmap {
+  position:fixed; top:56px; right:0;
+  width:300px; height:calc(100vh - 56px - 56px);
+  background:rgba(8,12,24,0.97);
+  backdrop-filter:blur(20px);
+  border-left:1px solid rgba(255,255,255,0.07);
+  z-index:150; overflow-y:auto;
+  transform:translateX(105%);
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+  padding:16px 0 24px;
+}
+#roadmap.open { transform:translateX(0); }
+.rm-phase {
+  padding:10px 18px;
+  cursor:pointer;
+  transition:background .15s;
+  display:flex; align-items:flex-start; gap:12px;
+}
+.rm-phase:hover { background:rgba(255,255,255,0.04); }
+.rm-phase.active { background:rgba(245,158,11,0.08); border-right:3px solid var(--gold); }
+.rm-dot {
+  width:28px; height:28px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:700; color:white; flex-shrink:0;
+  margin-top:1px;
+}
+.rm-info {}
+.rm-num { font-size:10px; color:rgba(255,255,255,0.35); margin-bottom:2px; }
+.rm-label { font-size:12.5px; color:rgba(255,255,255,0.82); line-height:1.5; }
+.rm-subs { padding:4px 18px 4px 0; }
+.rm-sub {
+  padding:6px 18px 6px 48px;
+  font-size:11.5px; color:rgba(255,255,255,0.5);
+  cursor:pointer; transition:color .15s;
+  display:flex; align-items:center; gap:8px;
+}
+.rm-sub:hover { color:var(--gold); }
+.rm-sub.active { color:var(--gold); }
+.rm-sub::before { content:''; width:5px; height:5px; border-radius:50%; background:currentColor; flex-shrink:0; }
+
+/* ── SLIDES ── */
+#stage {
+  position:fixed; top:56px; left:0; right:0; bottom:56px;
+  overflow:hidden;
+}
+.slide {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  opacity:0; pointer-events:none;
+  transition:opacity .4s ease, transform .4s ease;
+  transform:translateX(-24px);
+  overflow-y:auto; overflow-x:hidden;
+}
+.slide.active { opacity:1; pointer-events:all; transform:translateX(0); }
+.slide.out { opacity:0; transform:translateX(24px); }
+.slide::-webkit-scrollbar { width:3px; }
+.slide::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:2px; }
+
+/* ── COVER ── */
+.s-cover {
+  background:radial-gradient(ellipse at 30% 20%, #1a2f5e 0%, #0A0F1E 60%);
+  align-items:center; justify-content:center; text-align:center;
+  padding:40px;
+}
+.cv-eyebrow {
+  font-size:11px; font-weight:700; letter-spacing:.12em;
+  color:var(--gold); margin-bottom:20px;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.cv-eyebrow::before, .cv-eyebrow::after {
+  content:''; width:30px; height:1px; background:var(--gold); opacity:.4;
+}
+.cv-title {
+  font-family:'Tajawal',sans-serif;
+  font-size:clamp(26px,4vw,52px); font-weight:900;
+  line-height:1.25; margin-bottom:16px;
+  background:linear-gradient(135deg,#FFFFFF 30%,#93C5FD);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.cv-sub { font-size:clamp(14px,2vw,20px); color:var(--gold); margin-bottom:36px; font-weight:500; }
+.cv-steps {
+  display:flex; gap:8px; flex-wrap:wrap; justify-content:center;
+  margin-bottom:32px;
+}
+.cv-step {
+  padding:6px 14px; border-radius:20px; font-size:11px; font-weight:600;
+  border:1px solid rgba(255,255,255,0.15);
+  background:rgba(255,255,255,0.05);
+  cursor:pointer; transition:all .2s;
+}
+.cv-step:hover { border-color:var(--gold); color:var(--gold); }
+.cv-meta { font-size:12px; color:rgba(255,255,255,0.4); }
+.cv-meta strong { color:rgba(255,255,255,0.75); }
+
+/* ── PHASE HEADER ── */
+.s-phase {
+  align-items:center; justify-content:center; text-align:center;
+  padding:40px;
+}
+.ph-num {
+  font-family:'Tajawal',sans-serif;
+  font-size:clamp(80px,12vw,140px); font-weight:900;
+  line-height:.9; opacity:.07; margin-bottom:-40px;
+  color:white;
+}
+.ph-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:6px 16px; border-radius:20px;
+  font-size:11px; font-weight:700; letter-spacing:.06em;
+  margin-bottom:16px;
+}
+.ph-title {
+  font-family:'Tajawal',sans-serif;
+  font-size:clamp(22px,3.5vw,44px); font-weight:800;
+  line-height:1.3; margin-bottom:12px;
+}
+.ph-desc { font-size:14px; color:rgba(255,255,255,0.55); max-width:500px; line-height:1.8; }
+.ph-icon { font-size:48px; margin-bottom:16px; }
+
+/* ── CONTENT SLIDE (light bg) ── */
+.s-light {
+  background:var(--mist); color:var(--ink);
+  padding:24px 32px 24px;
+}
+.s-dark {
+  background:#0D1829; color:white;
+  padding:24px 32px 24px;
+}
+
+/* ── SLIDE HEADER ── */
+.sh {
+  display:flex; align-items:flex-start; gap:14px;
+  margin-bottom:20px; flex-shrink:0;
+}
+.sh-icon {
+  width:44px; height:44px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; flex-shrink:0; margin-top:2px;
+}
+.sh-tag { font-size:10px; font-weight:700; letter-spacing:.06em; margin-bottom:4px; }
+.sh-title {
+  font-family:'Tajawal',sans-serif;
+  font-size:clamp(17px,2.2vw,24px); font-weight:800; line-height:1.3;
+}
+.sh-sub { font-size:12.5px; color:var(--slate); margin-top:3px; }
+
+/* ── CARDS ── */
+.g2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; width:100%; }
+.g3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; width:100%; }
+.g4 { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; width:100%; }
+
+.card {
+  background:white; border-radius:14px; padding:18px;
+  box-shadow:0 1px 8px rgba(0,0,0,0.07); border:1px solid rgba(0,0,0,0.06);
+}
+.card-dark {
+  background:rgba(255,255,255,0.05); border-radius:14px; padding:18px;
+  border:1px solid rgba(255,255,255,0.08);
+}
+.card-h { font-size:13px; font-weight:700; color:var(--ink); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.card-b { font-size:12px; color:var(--slate); line-height:1.75; }
+
+/* ── LIST ── */
+.li { display:flex; align-items:flex-start; gap:9px; padding:7px 0; border-bottom:1px solid rgba(0,0,0,0.05); }
+.li:last-child { border:none; }
+.li-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+.li-t { font-size:12.5px; color:#334155; line-height:1.6; }
+
+.li-dark { display:flex; align-items:flex-start; gap:9px; padding:7px 0; border-bottom:1px solid rgba(255,255,255,0.06); }
+.li-dark:last-child { border:none; }
+.li-dark .li-t { color:rgba(255,255,255,0.75); }
+
+/* ── STAT CARDS ── */
+.stat {
+  background:white; border-radius:14px; padding:20px 16px;
+  text-align:center; box-shadow:0 2px 12px rgba(0,0,0,0.08);
+  border-top:4px solid;
+}
+.stat-n {
+  font-family:'Tajawal',sans-serif;
+  font-size:clamp(28px,4vw,48px); font-weight:900; line-height:1;
+  margin-bottom:6px;
+}
+.stat-l { font-size:11.5px; color:var(--slate); line-height:1.5; }
+
+/* ── STEP FLOW ── */
+.flow {
+  display:flex; align-items:stretch; gap:0; width:100%; margin:14px 0;
+}
+.flow-step {
+  flex:1; background:white; border-radius:12px; padding:14px 12px;
+  position:relative; margin:0 5px; text-align:center;
+  box-shadow:0 2px 8px rgba(0,0,0,0.07);
+  border-top:3px solid;
+}
+.flow-arrow {
+  display:flex; align-items:center; color:rgba(0,0,0,0.2);
+  font-size:18px; margin:0 -4px; z-index:1;
+}
+.fs-num { font-size:10px; font-weight:700; margin-bottom:5px; }
+.fs-title { font-size:12.5px; font-weight:700; color:var(--ink); margin-bottom:5px; }
+.fs-body { font-size:11px; color:var(--slate); line-height:1.5; }
+
+/* ── HORIZONTAL TIMELINE ── */
+.timeline { position:relative; padding:10px 0 16px; width:100%; }
+.tl-line {
+  position:absolute; top:28px; right:28px; left:28px; height:2px;
+  background:linear-gradient(90deg,var(--blue),var(--teal),var(--violet));
+  border-radius:2px;
+}
+.tl-items { display:flex; justify-content:space-between; position:relative; }
+.tl-item { flex:1; text-align:center; padding:0 6px; }
+.tl-circle {
+  width:36px; height:36px; border-radius:50%; margin:0 auto 10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:700; color:white; position:relative; z-index:1;
+}
+.tl-lbl { font-size:11px; color:var(--slate); line-height:1.4; }
+
+/* ── COMPARISON ── */
+.cmp { display:grid; grid-template-columns:1fr 40px 1fr; gap:12px; align-items:center; width:100%; }
+.cmp-col { background:white; border-radius:12px; padding:16px; }
+.cmp-h { font-size:12px; font-weight:700; margin-bottom:10px; padding-bottom:8px; border-bottom:2px solid; }
+.cmp-item { font-size:11.5px; color:var(--slate); padding:5px 0; border-bottom:1px solid rgba(0,0,0,0.05); line-height:1.5; }
+.cmp-arrow {
+  width:40px; height:40px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; color:white; justify-self:center;
+}
+
+/* ── FORM/TABLE ── */
+.ftable { width:100%; border-collapse:collapse; font-size:12px; }
+.ftable th {
+  padding:10px 14px; text-align:right; font-size:11px; font-weight:700;
+  color:white; letter-spacing:.03em;
+}
+.ftable td {
+  padding:10px 14px; border-bottom:1px solid rgba(0,0,0,0.06);
+  color:var(--slate); line-height:1.5;
+}
+.ftable tr:last-child td { border:none; }
+.ftable tr:hover td { background:rgba(0,0,0,0.015); }
+.badge {
+  display:inline-block; padding:2px 9px; border-radius:10px;
+  font-size:10px; font-weight:700;
+}
+
+/* ── BARS ── */
+.bar-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.bar-lbl { font-size:12px; min-width:140px; color:var(--slate); }
+.bar-track { flex:1; height:9px; background:rgba(0,0,0,0.07); border-radius:5px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:5px; width:0; transition:width 1.2s cubic-bezier(.4,0,.2,1) .3s; }
+.bar-pct { font-size:11px; font-weight:700; min-width:32px; }
+
+/* ── BOTTOM BAR ── */
+#botbar {
+  position:fixed; bottom:0; left:0; right:0; height:56px;
+  background:rgba(10,15,30,0.94); backdrop-filter:blur(12px);
+  border-top:1px solid rgba(255,255,255,0.07);
+  display:flex; align-items:center; justify-content:center;
+  gap:6px; z-index:200; padding:0 24px;
+}
+.dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.18); cursor:pointer; transition:all .2s; }
+.dot.active { width:20px; border-radius:3px; background:var(--gold); }
+.dot:hover { background:rgba(245,158,11,.5); }
+
+/* ── PHASE INDICATORS in content slides ── */
+.phase-pill {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:3px 10px; border-radius:20px; font-size:10px; font-weight:700;
+  margin-bottom:8px;
+}
+
+/* ── STRATEGY CARDS ── */
+.strat {
+  background:white; border-radius:14px; padding:16px;
+  border-right:4px solid; box-shadow:0 2px 10px rgba(0,0,0,0.07);
+}
+.strat-h { font-size:13px; font-weight:700; color:var(--ink); margin-bottom:6px; }
+.strat-sub { font-size:11px; color:var(--slate); margin-bottom:10px; }
+.strat-tag {
+  display:inline-block; padding:2px 8px; border-radius:8px;
+  font-size:10px; font-weight:700; margin-left:4px; margin-bottom:4px;
+}
+
+/* ── IMPACT BOX ── */
+.impact-box {
+  background:linear-gradient(135deg,#0F2744,#1D4ED8);
+  border-radius:16px; padding:24px; text-align:center; color:white;
+  box-shadow:0 8px 32px rgba(29,78,216,.35);
+}
+.impact-num {
+  font-family:'Tajawal',sans-serif;
+  font-size:clamp(48px,7vw,80px); font-weight:900;
+  color:var(--gold); line-height:1;
+}
+.impact-lbl { font-size:14px; color:rgba(255,255,255,.65); margin-top:6px; }
+
+/* ── FORM TEMPLATE ── */
+.form-box {
+  background:white; border-radius:14px; padding:20px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.08); width:100%;
+}
+.form-title { font-size:14px; font-weight:700; color:var(--ink); margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid; }
+.form-row { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid rgba(0,0,0,0.06); }
+.form-row:last-child { border:none; }
+.form-label { font-size:12px; color:var(--slate); flex:1; }
+.form-field {
+  width:120px; height:28px; border:1px solid #E2E8F0; border-radius:6px;
+  background:#F8FAFC; font-family:inherit; font-size:12px; padding:0 8px;
+  text-align:center; color:var(--ink);
+}
+.form-check {
+  display:flex; gap:8px;
+}
+.form-check span {
+  padding:3px 10px; border-radius:6px; font-size:11px; font-weight:600;
+  border:1px solid #E2E8F0; cursor:pointer; transition:all .2s; color:var(--slate);
+}
+.form-check span:hover { border-color:var(--sky); color:var(--sky); }
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px) {
+  .g2,.g3,.g4 { grid-template-columns:1fr; }
+  .flow { flex-direction:column; }
+  .cmp { grid-template-columns:1fr; }
+  .cmp-arrow { display:none; }
+  .s-light,.s-dark { padding:16px 16px; }
+  .tl-lbl { font-size:9px; }
+  #roadmap { width:100%; }
+}
+</style>
+</head>
+<body>
+
+<div id="pgbar"><div id="pgfill"></div></div>
+
+<nav id="topbar">
+  <span class="tb-brand">بحث إجرائي تقصي التدني — ثانوية ١٣٤</span>
+  <div class="tb-right">
+    <button class="tb-btn" id="bprev">›</button>
+    <span class="tb-ctr" id="ctr">١ / ٢٧</span>
+    <button class="tb-btn" id="bnext">‹</button>
+    <button id="mapbtn">🗺 خريطة البحث</button>
+    <button id="dlbtn" onclick="downloadFile()" title="تحميل الملف كاملاً">⬇ تحميل الملف</button>
+  </div>
+</nav>
+
+<div id="roadmap">
+  <!-- filled by JS -->
+</div>
+
+<div id="stage">
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 0 — COVER
+═══════════════════════════════════════════════════════ -->
+<div class="slide s-cover active" id="s0">
+  <div class="cv-eyebrow">ثانوية ١٣٤ للبنات — الرياض — الفصل الثاني ١٤٤٧هـ</div>
+  <div class="cv-title">بحث إجرائي تقصي أسباب التدني<br>في التحصيل الدراسي</div>
+  <div class="cv-sub">منهجية متكاملة من التشخيص إلى قياس الأثر</div>
+  <div class="cv-steps">
+    <div class="cv-step" style="border-color:rgba(29,78,216,.5);color:#93C5FD;" onclick="goTo(2)">١ · البحث والتحليل</div>
+    <div class="cv-step" style="border-color:rgba(8,145,178,.5);color:#67E8F9;" onclick="goTo(6)">٢ · الخطة العلاجية</div>
+    <div class="cv-step" style="border-color:rgba(124,58,237,.5);color:#C4B5FD;" onclick="goTo(11)">٣ · التنفيذ والأدوات</div>
+    <div class="cv-step" style="border-color:rgba(217,119,6,.5);color:#FCD34D;" onclick="goTo(15)">٤ · الدعم والمساندة</div>
+    <div class="cv-step" style="border-color:rgba(5,150,105,.5);color:#6EE7B7;" onclick="goTo(18)">٥ · استمارات المتابعة</div>
+    <div class="cv-step" style="border-color:rgba(220,38,38,.5);color:#FCA5A5;" onclick="goTo(21)">٦ · النتائج وقياس الأثر</div>
+  </div>
+  <div class="cv-meta">
+    إعداد: <strong>المعلمة الجوهرة رازن</strong> &nbsp;·&nbsp; إشراف: <strong>مديرة المدرسة سلطانة الدويش</strong>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 1 — OVERVIEW ROADMAP
+═══════════════════════════════════════════════════════ -->
+<div class="slide s-dark" id="s1" style="justify-content:center; align-items:center; padding:32px;">
+  <div style="width:100%; max-width:780px;">
+    <div style="text-align:center; margin-bottom:28px;">
+      <div style="font-size:11px; font-weight:700; color:var(--gold); letter-spacing:.08em; margin-bottom:8px;">خريطة المنهجية المتكاملة</div>
+      <div style="font-family:'Tajawal',sans-serif; font-size:clamp(18px,2.5vw,28px); font-weight:800;">مسار البحث الإجرائي — ٦ مراحل متسلسلة</div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div onclick="goTo(2)" style="display:flex; align-items:center; gap:14px; background:rgba(29,78,216,.12); border:1px solid rgba(29,78,216,.3); border-radius:12px; padding:14px 18px; cursor:pointer; transition:all .2s;" onmouseover="this.style.background='rgba(29,78,216,.22)'" onmouseout="this.style.background='rgba(29,78,216,.12)'">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--step1);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;">١</div>
+        <div style="flex:1;"><div style="font-weight:700;margin-bottom:2px;">البحث والتحليل</div><div style="font-size:12px;color:rgba(255,255,255,.5);">التشخيص — جمع البيانات — رصد العوامل — الدراسات العالمية</div></div>
+        <div style="color:rgba(255,255,255,.3);">‹</div>
+      </div>
+      <div onclick="goTo(6)" style="display:flex; align-items:center; gap:14px; background:rgba(8,145,178,.12); border:1px solid rgba(8,145,178,.3); border-radius:12px; padding:14px 18px; cursor:pointer; transition:all .2s;" onmouseover="this.style.background='rgba(8,145,178,.22)'" onmouseout="this.style.background='rgba(8,145,178,.12)'">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--step2);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;">٢</div>
+        <div style="flex:1;"><div style="font-weight:700;margin-bottom:2px;">الخطة العلاجية والإثرائية</div><div style="font-size:12px;color:rgba(255,255,255,.5);">خطة فردية خاصة — تحديد الاحتياج — الأهداف القابلة للقياس</div></div>
+        <div style="color:rgba(255,255,255,.3);">‹</div>
+      </div>
+      <div onclick="goTo(11)" style="display:flex; align-items:center; gap:14px; background:rgba(124,58,237,.12); border:1px solid rgba(124,58,237,.3); border-radius:12px; padding:14px 18px; cursor:pointer; transition:all .2s;" onmouseover="this.style.background='rgba(124,58,237,.22)'" onmouseout="this.style.background='rgba(124,58,237,.12)'">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--step3);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;">٣</div>
+        <div style="flex:1;"><div style="font-weight:700;margin-bottom:2px;">آلية التنفيذ وأدواته</div><div style="font-size:12px;color:rgba(255,255,255,.5);">التقييم المعكوس — Quizizz — Wordwall — اختبارات تشكيلية</div></div>
+        <div style="color:rgba(255,255,255,.3);">‹</div>
+      </div>
+      <div onclick="goTo(15)" style="display:flex; align-items:center; gap:14px; background:rgba(217,119,6,.12); border:1px solid rgba(217,119,6,.3); border-radius:12px; padding:14px 18px; cursor:pointer; transition:all .2s;" onmouseover="this.style.background='rgba(217,119,6,.22)'" onmouseout="this.style.background='rgba(217,119,6,.12)'">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--step4);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;">٤</div>
+        <div style="flex:1;"><div style="font-weight:700;margin-bottom:2px;">الدعم والمساندة</div><div style="font-size:12px;color:rgba(255,255,255,.5);">الشؤون الطلابية — التوجيه — الأسرة — المجتمع</div></div>
+        <div style="color:rgba(255,255,255,.3);">‹</div>
+      </div>
+      <div onclick="goTo(18)" style="display:flex; align-items:center; gap:14px; background:rgba(5,150,105,.12); border:1px solid rgba(5,150,105,.3); border-radius:12px; padding:14px 18px; cursor:pointer; transition:all .2s;" onmouseover="this.style.background='rgba(5,150,105,.22)'" onmouseout="this.style.background='rgba(5,150,105,.12)'">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--step5);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;">٥</div>
+        <div style="flex:1;"><div style="font-weight:700;margin-bottom:2px;">استمارات متابعة التحسن</div><div style="font-size:12px;color:rgba(255,255,255,.5);">استمارة الطالبة — المعلمة — ولي الأمر — مؤشرات التقدم</div></div>
+        <div style="color:rgba(255,255,255,.3);">‹</div>
+      </div>
+      <div onclick="goTo(21)" style="display:flex; align-items:center; gap:14px; background:rgba(220,38,38,.12); border:1px solid rgba(220,38,38,.3); border-radius:12px; padding:14px 18px; cursor:pointer; transition:all .2s;" onmouseover="this.style.background='rgba(220,38,38,.22)'" onmouseout="this.style.background='rgba(220,38,38,.12)'">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--step6);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;">٦</div>
+        <div style="flex:1;"><div style="font-weight:700;margin-bottom:2px;">النتائج والتحليل وقياس الأثر</div><div style="font-size:12px;color:rgba(255,255,255,.5);">نموذج كيركباتريك — Cohen's d — استدامة الأثر</div></div>
+        <div style="color:rgba(255,255,255,.3);">‹</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PHASE 1 HEADER ═══ -->
+<div class="slide s-phase" id="s2" style="background:radial-gradient(ellipse at 40% 40%, #162B6E 0%, #0A0F1E 65%);">
+  <div class="ph-num">١</div>
+  <div class="ph-icon">🔬</div>
+  <div class="ph-badge" style="background:rgba(29,78,216,.2); color:#93C5FD; border:1px solid rgba(29,78,216,.4);">المرحلة الأولى</div>
+  <div class="ph-title">البحث والتحليل</div>
+  <div class="ph-desc">التشخيص الميداني الدقيق — جمع البيانات الكمية والنوعية — رصد العوامل — مقارنة الأدبيات الدولية</div>
+</div>
+
+<!-- ═══ 1.1 — منهجية البحث ═══ -->
+<div class="slide s-light" id="s3">
+  <div class="sh">
+    <div class="sh-icon" style="background:#EFF6FF; color:var(--blue);">📐</div>
+    <div>
+      <div class="sh-tag" style="color:var(--blue);">المرحلة الأولى · ١.١</div>
+      <div class="sh-title">منهجية البحث المختلط — الأدوات والعينة</div>
+    </div>
+  </div>
+  <div class="g3" style="margin-bottom:14px;">
+    <div class="card" style="border-top:3px solid var(--blue);">
+      <div class="card-h" style="color:var(--blue);">📊 المنهج الكمي</div>
+      <div class="li"><div class="li-dot" style="background:var(--blue)"></div><div class="li-t"><strong>٧٣</strong> طالبة — استبيان مقنّن</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--blue)"></div><div class="li-t"><strong>١٨</strong> معلمة — استبيان تخصصي</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--blue)"></div><div class="li-t"><strong>٨</strong> قياديات — استبيان إداري</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--blue)"></div><div class="li-t">تحليل إحصائي وصفي</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--teal);">
+      <div class="card-h" style="color:var(--teal);">🎙 المنهج النوعي</div>
+      <div class="li"><div class="li-dot" style="background:var(--teal)"></div><div class="li-t"><strong>١٢٠</strong> مقابلة فردية وجماعية</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--teal)"></div><div class="li-t">ملاحظة ميدانية للصف</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--teal)"></div><div class="li-t">مراجعة السجلات الأكاديمية</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--teal)"></div><div class="li-t">تحليل موضوعاتي لاستخلاص الأنماط</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--violet);">
+      <div class="card-h" style="color:var(--violet);">🔬 المنهج التجريبي</div>
+      <div class="li"><div class="li-dot" style="background:var(--violet)"></div><div class="li-t">مجموعة تجريبية + ضابطة</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--violet)"></div><div class="li-t">اختبار قبلي وبعدي موحّد</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--violet)"></div><div class="li-t">تدخل بتقنيات تعليمية — ٦ أسابيع</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--violet)"></div><div class="li-t">متابعة بعد شهر لقياس الاستدامة</div></div>
+    </div>
+  </div>
+  <div class="g4">
+    <div class="stat" style="border-color:var(--blue);"><div class="stat-n" style="color:var(--blue);">٧٣</div><div class="stat-l">طالبة في الاستبيان</div></div>
+    <div class="stat" style="border-color:var(--teal);"><div class="stat-n" style="color:var(--teal);">١٢٠</div><div class="stat-l">مقابلة ميدانية</div></div>
+    <div class="stat" style="border-color:var(--violet);"><div class="stat-n" style="color:var(--violet);">٢٦</div><div class="stat-l">معلمة وقيادية</div></div>
+    <div class="stat" style="border-color:var(--amber);"><div class="stat-n" style="color:var(--amber);">٦</div><div class="stat-l">أسابيع تدخل تجريبي</div></div>
+  </div>
+</div>
+
+<!-- ═══ 1.2 — نتائج التشخيص ═══ -->
+<div class="slide s-light" id="s4">
+  <div class="sh">
+    <div class="sh-icon" style="background:#FEF3F2; color:var(--rose);">📈</div>
+    <div>
+      <div class="sh-tag" style="color:var(--rose);">المرحلة الأولى · ١.٢</div>
+      <div class="sh-title">نتائج التشخيص — أبرز ما كشفته البيانات</div>
+    </div>
+  </div>
+  <div class="g4" style="margin-bottom:16px;">
+    <div class="stat" style="border-color:var(--mint);"><div class="stat-n" style="color:var(--mint);">٦٠٪</div><div class="stat-l">راضيات عن مستواهن الحالي</div></div>
+    <div class="stat" style="border-color:var(--amber);"><div class="stat-n" style="color:var(--amber);">٤٠٪</div><div class="stat-l">يرغبن في أداء أفضل ولا يعرفن الكيفية</div></div>
+    <div class="stat" style="border-color:var(--rose);"><div class="stat-n" style="color:var(--rose);">٨٠٪</div><div class="stat-l">يعانين من التشتت والأفكار السلبية</div></div>
+    <div class="stat" style="border-color:var(--violet);"><div class="stat-n" style="color:var(--violet);">الأغلب</div><div class="stat-l">تؤجل الدراسة لآخر لحظة</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">العوامل الأعلى تأثيراً — مؤشرات بصرية</div>
+    <div class="bar-row"><div class="bar-lbl">التشتت وضعف التركيز</div><div class="bar-track"><div class="bar-fill" data-p="80" style="background:linear-gradient(90deg,var(--rose),#EF4444)"></div></div><div class="bar-pct" style="color:var(--rose);">٨٠٪</div></div>
+    <div class="bar-row"><div class="bar-lbl">التسويف وتأجيل الدراسة</div><div class="bar-track"><div class="bar-fill" data-p="72" style="background:linear-gradient(90deg,var(--violet),#A855F7)"></div></div><div class="bar-pct" style="color:var(--violet);">٧٢٪</div></div>
+    <div class="bar-row"><div class="bar-lbl">ضعف الثقة بالنفس</div><div class="bar-track"><div class="bar-fill" data-p="65" style="background:linear-gradient(90deg,var(--amber),#FCD34D)"></div></div><div class="bar-pct" style="color:var(--amber);">٦٥٪</div></div>
+    <div class="bar-row"><div class="bar-lbl">ضعف الدعم الأسري</div><div class="bar-track"><div class="bar-fill" data-p="55" style="background:linear-gradient(90deg,var(--teal),#22D3EE)"></div></div><div class="bar-pct" style="color:var(--teal);">٥٥٪</div></div>
+    <div class="bar-row"><div class="bar-lbl">ضعف التغذية الراجعة الفورية</div><div class="bar-track"><div class="bar-fill" data-p="48" style="background:linear-gradient(90deg,var(--blue),#60A5FA)"></div></div><div class="bar-pct" style="color:var(--blue);">٤٨٪</div></div>
+  </div>
+</div>
+
+<!-- ═══ 1.3 — العوامل الرباعية ═══ -->
+<div class="slide s-light" id="s5">
+  <div class="sh">
+    <div class="sh-icon" style="background:#EFF6FF; color:var(--blue);">🔍</div>
+    <div>
+      <div class="sh-tag" style="color:var(--blue);">المرحلة الأولى · ١.٣</div>
+      <div class="sh-title">إطار العوامل المؤثرة — تحليل رباعي الأبعاد</div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card" style="border-top:3px solid #9B59B6;">
+      <div class="card-h">👥 <span style="color:#9B59B6;">اجتماعية</span></div>
+      <div class="li"><div class="li-dot" style="background:#9B59B6"></div><div class="li-t">ضعف الدعم الأسري ومتابعة ولي الأمر</div></div>
+      <div class="li"><div class="li-dot" style="background:#9B59B6"></div><div class="li-t">الضغوط الثقافية والتوقعات المتعارضة</div></div>
+      <div class="li"><div class="li-dot" style="background:#9B59B6"></div><div class="li-t">غياب النماذج الإيجابية المحيطة</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--amber);">
+      <div class="card-h">💰 <span style="color:var(--amber);">اقتصادية</span></div>
+      <div class="li"><div class="li-dot" style="background:var(--amber)"></div><div class="li-t">محدودية الموارد التعليمية في المنزل</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--amber)"></div><div class="li-t">تعذّر الحصول على دروس خصوصية</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--amber)"></div><div class="li-t">الفجوة الرقمية والتقنية</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--rose);">
+      <div class="card-h">🧠 <span style="color:var(--rose);">نفسية</span></div>
+      <div class="li"><div class="li-dot" style="background:var(--rose)"></div><div class="li-t">قلق الاختبارات والخوف من الفشل</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--rose)"></div><div class="li-t">ضعف الكفاءة الذاتية (Bandura)</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--rose)"></div><div class="li-t">التشتت والتسويف المزمن</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--teal);">
+      <div class="card-h">📚 <span style="color:var(--teal);">تعليمية</span></div>
+      <div class="li"><div class="li-dot" style="background:var(--teal)"></div><div class="li-t">أسلوب تدريس تقليدي أحادي الاتجاه</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--teal)"></div><div class="li-t">ضعف التغذية الراجعة الفورية</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--teal)"></div><div class="li-t">غياب التمييز بين المستويات</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PHASE 2 HEADER ═══ -->
+<div class="slide s-phase" id="s6" style="background:radial-gradient(ellipse at 40% 40%, #0A3D4F 0%, #0A0F1E 65%);">
+  <div class="ph-num">٢</div>
+  <div class="ph-icon">📋</div>
+  <div class="ph-badge" style="background:rgba(8,145,178,.2); color:#67E8F9; border:1px solid rgba(8,145,178,.4);">المرحلة الثانية</div>
+  <div class="ph-title">الخطة العلاجية والإثرائية</div>
+  <div class="ph-desc">خطة فردية خاصة لكل طالبة — تحديد الاحتياج الحقيقي — رفع التحصيل في التخصص</div>
+</div>
+
+<!-- ═══ 2.1 — مكونات الخطة ═══ -->
+<div class="slide s-light" id="s7">
+  <div class="sh">
+    <div class="sh-icon" style="background:#F0FDFA; color:var(--teal);">📄</div>
+    <div>
+      <div class="sh-tag" style="color:var(--teal);">المرحلة الثانية · ٢.١</div>
+      <div class="sh-title">هيكل الخطة الفردية — مكونات اللخطة وآلية بنائها</div>
+    </div>
+  </div>
+  <div class="g2" style="margin-bottom:14px;">
+    <div class="card" style="border-top:3px solid var(--teal);">
+      <div class="card-h" style="color:var(--teal);">🔎 ١ — تحليل الوضع الراهن</div>
+      <div class="li"><div class="li-dot"></div><div class="li-t">استعراض درجات الطالبة عبر الوحدات</div></div>
+      <div class="li"><div class="li-dot"></div><div class="li-t">تحديد المواضيع والمهارات الضعيفة</div></div>
+      <div class="li"><div class="li-dot"></div><div class="li-t">مقابلة تشخيصية مع الطالبة</div></div>
+      <div class="li"><div class="li-dot"></div><div class="li-t">استطلاع ولي الأمر عن البيئة المنزلية</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue);">
+      <div class="card-h" style="color:var(--blue);">🎯 ٢ — تحديد الأهداف القابلة للقياس</div>
+      <div class="li"><div class="li-dot" style="background:var(--blue)"></div><div class="li-t">هدف أكاديمي: رفع الدرجة بـ X نقطة خلال ٦ أسابيع</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--blue)"></div><div class="li-t">هدف مهاري: إتقان مهارة بعينها</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--blue)"></div><div class="li-t">هدف سلوكي: تحسين الانتظام والمشاركة</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--violet);">
+      <div class="card-h" style="color:var(--violet);">🛠 ٣ — التدخلات المقترحة</div>
+      <div class="li"><div class="li-dot" style="background:var(--violet)"></div><div class="li-t">جلسات دعم أكاديمي فردي</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--violet)"></div><div class="li-t">استراتيجيات تعليمية مكيّفة</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--violet)"></div><div class="li-t">موارد رقمية مخصصة</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--violet)"></div><div class="li-t">دعم نفسي عند الحاجة</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--mint);">
+      <div class="card-h" style="color:var(--mint);">📅 ٤ — الجدول الزمني والمتابعة</div>
+      <div class="li"><div class="li-dot" style="background:var(--mint)"></div><div class="li-t">جلسة مراجعة أسبوعية مع المعلمة</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--mint)"></div><div class="li-t">تقرير نصف شهري لولي الأمر</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--mint)"></div><div class="li-t">اجتماع شهري مع المرشدة</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--mint)"></div><div class="li-t">مراجعة وتعديل الخطة كل ٣ أسابيع</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 2.2 — نموذج الخطة الفردية ═══ -->
+<div class="slide s-light" id="s8">
+  <div class="sh">
+    <div class="sh-icon" style="background:#F0FDFA; color:var(--teal);">📝</div>
+    <div>
+      <div class="sh-tag" style="color:var(--teal);">المرحلة الثانية · ٢.٢</div>
+      <div class="sh-title">نموذج الخطة الفردية لرفع التحصيل</div>
+    </div>
+  </div>
+  <div class="form-box">
+    <div class="form-title" style="border-color:var(--teal);">📋 الخطة الفردية لرفع التحصيل الدراسي — ثانوية ١٣٤</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+      <div class="form-row"><div class="form-label">اسم الطالبة</div><input class="form-field" style="width:100%;" placeholder="..."></div>
+      <div class="form-row"><div class="form-label">المادة / التخصص</div><input class="form-field" style="width:100%;" placeholder="..."></div>
+      <div class="form-row"><div class="form-label">الدرجة الحالية</div><input class="form-field" placeholder="/ ١٠٠"></div>
+      <div class="form-row"><div class="form-label">الهدف المستهدف</div><input class="form-field" placeholder="/ ١٠٠"></div>
+      <div class="form-row"><div class="form-label">تاريخ البدء</div><input class="form-field" placeholder="__/__/١٤٤٧"></div>
+      <div class="form-row"><div class="form-label">تاريخ المراجعة</div><input class="form-field" placeholder="__/__/١٤٤٧"></div>
+    </div>
+    <div style="background:var(--mist); border-radius:10px; padding:12px; margin-bottom:12px;">
+      <div style="font-size:12px; font-weight:700; color:var(--ink); margin-bottom:8px;">المهارات والمواضيع الضعيفة</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <span style="padding:4px 12px; background:white; border:1px dashed #CBD5E1; border-radius:8px; font-size:12px; color:var(--slate);">١. _______________</span>
+        <span style="padding:4px 12px; background:white; border:1px dashed #CBD5E1; border-radius:8px; font-size:12px; color:var(--slate);">٢. _______________</span>
+        <span style="padding:4px 12px; background:white; border:1px dashed #CBD5E1; border-radius:8px; font-size:12px; color:var(--slate);">٣. _______________</span>
+      </div>
+    </div>
+    <div style="background:var(--mist); border-radius:10px; padding:12px;">
+      <div style="font-size:12px; font-weight:700; color:var(--ink); margin-bottom:8px;">التدخلات المختارة</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+        <div class="form-row" style="flex-direction:column; align-items:flex-start; padding:6px 8px; background:white; border-radius:8px;">
+          <div style="font-size:11px; font-weight:600; color:var(--violet); margin-bottom:4px;">أكاديمي</div>
+          <div class="form-check"><span>تقييم ذاتي</span><span>تعاوني</span><span>مباشر</span></div>
+        </div>
+        <div class="form-row" style="flex-direction:column; align-items:flex-start; padding:6px 8px; background:white; border-radius:8px;">
+          <div style="font-size:11px; font-weight:600; color:var(--teal); margin-bottom:4px;">تقني</div>
+          <div class="form-check"><span>Quizizz</span><span>Wordwall</span><span>فيديو</span></div>
+        </div>
+        <div class="form-row" style="flex-direction:column; align-items:flex-start; padding:6px 8px; background:white; border-radius:8px;">
+          <div style="font-size:11px; font-weight:600; color:var(--amber); margin-bottom:4px;">دعم</div>
+          <div class="form-check"><span>نفسي</span><span>أسري</span><span>أقران</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 2.3 — تصنيف الطالبات ═══ -->
+<div class="slide s-light" id="s9">
+  <div class="sh">
+    <div class="sh-icon" style="background:#F0FDFA; color:var(--teal);">📊</div>
+    <div>
+      <div class="sh-tag" style="color:var(--teal);">المرحلة الثانية · ٢.٣</div>
+      <div class="sh-title">تصنيف الطالبات — مسارات الدعم والإثراء</div>
+    </div>
+  </div>
+  <div class="g3">
+    <div class="card" style="border-top:4px solid var(--rose);">
+      <div class="card-h" style="color:var(--rose);">🔴 المستوى الحرج<br><span style="font-size:11px; color:var(--slate); font-weight:400;">(أقل من ٦٠٪)</span></div>
+      <div class="li"><div class="li-dot" style="background:var(--rose)"></div><div class="li-t">جلسات دعم فردية مكثّفة أسبوعياً</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--rose)"></div><div class="li-t">إحالة للمرشدة الطلابية فوراً</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--rose)"></div><div class="li-t">إشراك ولي الأمر في خطة الدعم</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--rose)"></div><div class="li-t">مراجعة نقطية يومية (Exit Ticket)</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--rose)"></div><div class="li-t">اختبارات قصيرة تشخيصية أسبوعياً</div></div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--amber);">
+      <div class="card-h" style="color:var(--amber);">🟡 المستوى المتوسط<br><span style="font-size:11px; color:var(--slate); font-weight:400;">(٦٠٪ – ٧٩٪)</span></div>
+      <div class="li"><div class="li-dot" style="background:var(--amber)"></div><div class="li-t">مجموعات تعاونية مستهدفة</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--amber)"></div><div class="li-t">تقنيات التقييم المعكوس الذاتي</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--amber)"></div><div class="li-t">تغذية راجعة فورية بعد كل حصة</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--amber)"></div><div class="li-t">أنشطة تفاعلية (Quizizz / Wordwall)</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--amber)"></div><div class="li-t">متابعة أسبوعية مع المعلمة</div></div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--mint);">
+      <div class="card-h" style="color:var(--mint);">🟢 المستوى المتقدم<br><span style="font-size:11px; color:var(--slate); font-weight:400;">(٨٠٪ فأكثر)</span></div>
+      <div class="li"><div class="li-dot" style="background:var(--mint)"></div><div class="li-t">مهام إثرائية وتحدّيات أعمق</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--mint)"></div><div class="li-t">دور المعلمة / قائدة المجموعة</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--mint)"></div><div class="li-t">مشاريع بحثية وتحليلية</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--mint)"></div><div class="li-t">تمثيل المدرسة في المسابقات</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--mint)"></div><div class="li-t">إنتاج محتوى تعليمي لأقرانها</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 2.4 — الجدول الزمني ═══ -->
+<div class="slide s-light" id="s10">
+  <div class="sh">
+    <div class="sh-icon" style="background:#F0FDFA; color:var(--teal);">🗓</div>
+    <div>
+      <div class="sh-tag" style="color:var(--teal);">المرحلة الثانية · ٢.٤</div>
+      <div class="sh-title">الجدول الزمني للخطة العلاجية — ٦ أسابيع</div>
+    </div>
+  </div>
+  <div class="flow" style="margin-bottom:16px;">
+    <div class="flow-step" style="border-color:var(--blue);">
+      <div class="fs-num" style="color:var(--blue);">الأسبوع ١</div>
+      <div class="fs-title">التشخيص</div>
+      <div class="fs-body">اختبار قبلي — مقابلة — تحديد المستوى</div>
+    </div>
+    <div class="flow-arrow">◄</div>
+    <div class="flow-step" style="border-color:var(--teal);">
+      <div class="fs-num" style="color:var(--teal);">الأسبوع ٢-٣</div>
+      <div class="fs-title">التدخل المكثّف</div>
+      <div class="fs-body">استراتيجيات مكيّفة — دعم يومي</div>
+    </div>
+    <div class="flow-arrow">◄</div>
+    <div class="flow-step" style="border-color:var(--violet);">
+      <div class="fs-num" style="color:var(--violet);">الأسبوع ٤</div>
+      <div class="fs-title">التقييم المرحلي</div>
+      <div class="fs-body">اختبار منتصف المسار — تعديل الخطة</div>
+    </div>
+    <div class="flow-arrow">◄</div>
+    <div class="flow-step" style="border-color:var(--amber);">
+      <div class="fs-num" style="color:var(--amber);">الأسبوع ٥-٦</div>
+      <div class="fs-title">التعزيز</div>
+      <div class="fs-body">تثبيت المكتسبات — رفع السقف</div>
+    </div>
+    <div class="flow-arrow">◄</div>
+    <div class="flow-step" style="border-color:var(--mint);">
+      <div class="fs-num" style="color:var(--mint);">بعد شهر</div>
+      <div class="fs-title">قياس الأثر</div>
+      <div class="fs-body">متابعة الاستدامة — تقرير نهائي</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-h">معيار النجاح في الخطة</div>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:10px;">
+      <div style="text-align:center; padding:12px; background:var(--mist); border-radius:10px;">
+        <div style="font-size:22px; font-weight:800; color:var(--blue);">+١٥٪</div>
+        <div style="font-size:11px; color:var(--slate);">الحد الأدنى للتحسن</div>
+      </div>
+      <div style="text-align:center; padding:12px; background:var(--mist); border-radius:10px;">
+        <div style="font-size:22px; font-weight:800; color:var(--teal);">+٢٥٪</div>
+        <div style="font-size:11px; color:var(--slate);">الهدف المستهدف</div>
+      </div>
+      <div style="text-align:center; padding:12px; background:var(--mist); border-radius:10px;">
+        <div style="font-size:22px; font-weight:800; color:var(--mint);">٩٠٪</div>
+        <div style="font-size:11px; color:var(--slate);">رضا الطالبة عن التجربة</div>
+      </div>
+      <div style="text-align:center; padding:12px; background:var(--mist); border-radius:10px;">
+        <div style="font-size:22px; font-weight:800; color:var(--violet);">٤</div>
+        <div style="font-size:11px; color:var(--slate);">مهارات يجب إتقانها</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PHASE 3 HEADER ═══ -->
+<div class="slide s-phase" id="s11" style="background:radial-gradient(ellipse at 40% 40%, #2D1B6B 0%, #0A0F1E 65%);">
+  <div class="ph-num">٣</div>
+  <div class="ph-icon">⚙️</div>
+  <div class="ph-badge" style="background:rgba(124,58,237,.2); color:#C4B5FD; border:1px solid rgba(124,58,237,.4);">المرحلة الثالثة</div>
+  <div class="ph-title">آلية التنفيذ وأدواته</div>
+  <div class="ph-desc">التقييم المعكوس — نموذج تقييم المهارات الأربع للغة الإنجليزية — التأمل الذاتي — خطة التحسين</div>
+</div>
+
+<!-- ═══ 3.1 — مفهوم التقييم المعكوس ═══ -->
+<div class="slide s-light" id="s12">
+  <div class="sh">
+    <div class="sh-icon" style="background:#F5F3FF; color:var(--violet);">🔄</div>
+    <div>
+      <div class="sh-tag" style="color:var(--violet);">المرحلة الثالثة · ٣.١</div>
+      <div class="sh-title">التقييم المعكوس — الطالبة هي المُقيِّمة لنفسها أولاً</div>
+    </div>
+  </div>
+  <div class="cmp" style="margin-bottom:16px;">
+    <div class="cmp-col" style="background:#FEF2F2;">
+      <div class="cmp-h" style="color:var(--rose); border-color:var(--rose);">التقييم التقليدي ✗</div>
+      <div class="cmp-item">المعلمة تُقيّم — الطالبة تنتظر النتيجة</div>
+      <div class="cmp-item">الطالبة لا تعرف أين الضعف تحديداً</div>
+      <div class="cmp-item">التغذية الراجعة بعد أسابيع</div>
+      <div class="cmp-item">الطالبة سلبية في مسيرتها التعليمية</div>
+    </div>
+    <div class="cmp-arrow" style="background:var(--violet);">◄</div>
+    <div class="cmp-col" style="background:#F5F3FF;">
+      <div class="cmp-h" style="color:var(--violet); border-color:var(--violet);">التقييم المعكوس ✓</div>
+      <div class="cmp-item">الطالبة تُقيّم نفسها أولاً بنموذج مهاري محدد</div>
+      <div class="cmp-item">تحدد بنفسها نقاط القوة والضعف في كل مهارة</div>
+      <div class="cmp-item">تضع خطة تحسين خاصة بها</div>
+      <div class="cmp-item">المعلمة تدعم وتوجّه — لا تملي وتحكم</div>
+    </div>
+  </div>
+  <div class="flow" style="width:100%;">
+    <div class="flow-step" style="border-color:var(--blue);">
+      <div class="fs-num" style="color:var(--blue);">الخطوة ١</div>
+      <div class="fs-title">نموذج المهارات</div>
+      <div class="fs-body">الطالبة تعبّئ تقييمها للمهارات الأربع</div>
+    </div>
+    <div class="flow-arrow">◄</div>
+    <div class="flow-step" style="border-color:var(--teal);">
+      <div class="fs-num" style="color:var(--teal);">الخطوة ٢</div>
+      <div class="fs-title">تقييم الأداء</div>
+      <div class="fs-body">المشاركة + الواجبات + المشاريع</div>
+    </div>
+    <div class="flow-arrow">◄</div>
+    <div class="flow-step" style="border-color:var(--violet);">
+      <div class="fs-num" style="color:var(--violet);">الخطوة ٣</div>
+      <div class="fs-title">التأمل الذاتي</div>
+      <div class="fs-body">نقاط الضعف + أفضل إنجاز</div>
+    </div>
+    <div class="flow-arrow">◄</div>
+    <div class="flow-step" style="border-color:var(--mint);">
+      <div class="fs-num" style="color:var(--mint);">الخطوة ٤</div>
+      <div class="fs-title">خطة التحسين</div>
+      <div class="fs-body">أهداف قابلة للقياس خلال أسبوعين</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 3.2 — نموذج التقييم المعكوس — المهارات الأربع ═══ -->
+<div class="slide s-light" id="s13">
+  <div class="sh">
+    <div class="sh-icon" style="background:#F5F3FF; color:var(--violet);">📋</div>
+    <div>
+      <div class="sh-tag" style="color:var(--violet);">المرحلة الثالثة · ٣.٢</div>
+      <div class="sh-title">نموذج التقييم المعكوس — اللغة الإنجليزية — المهارات الأربع + الأداء + التأمل</div>
+    </div>
+  </div>
+  <div class="form-box" id="selfAssessForm" style="padding:16px; user-select:text;">
+    <div class="form-title" style="border-color:var(--violet); font-size:13px; display:flex; align-items:center; justify-content:space-between;">
+      <span>🔄 نموذج التقييم الذاتي للطالبة — اللغة الإنجليزية</span>
+      <button onclick="downloadForm()" style="background:var(--violet);color:white;border:none;padding:5px 14px;border-radius:8px;font-size:11px;font-family:inherit;cursor:pointer;font-weight:700;">⬇ تحميل PDF</button>
+    </div>
+
+    <!-- معلومات أساسية -->
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:12px;">
+      <div><div style="font-size:10px;font-weight:700;color:var(--slate);margin-bottom:3px;">اسم الطالبة</div><input id="f-name" style="width:100%;border:1px solid #E2E8F0;border-radius:7px;padding:5px 8px;font-size:12px;font-family:inherit;" placeholder="أكتبي اسمك..."></div>
+      <div><div style="font-size:10px;font-weight:700;color:var(--slate);margin-bottom:3px;">الوحدة / الفصل</div><input id="f-unit" style="width:100%;border:1px solid #E2E8F0;border-radius:7px;padding:5px 8px;font-size:12px;font-family:inherit;" placeholder="مثال: الوحدة الثانية"></div>
+      <div><div style="font-size:10px;font-weight:700;color:var(--slate);margin-bottom:3px;">التاريخ</div><input id="f-date" type="date" style="width:100%;border:1px solid #E2E8F0;border-radius:7px;padding:5px 8px;font-size:12px;font-family:inherit;"></div>
+    </div>
+
+    <!-- القسم الأول: المهارات الأربع -->
+    <div style="font-size:11.5px;font-weight:700;color:white;margin-bottom:8px;padding:6px 10px;background:linear-gradient(90deg,var(--violet),var(--blue));border-radius:8px;">
+      القسم الأول: تقييم مهارات اللغة الإنجليزية الأربع
+    </div>
+    <div style="overflow:hidden;border-radius:10px;margin-bottom:12px;box-shadow:0 1px 6px rgba(0,0,0,.07);">
+      <table class="ftable" style="background:white;">
+        <thead style="background:linear-gradient(135deg,#5B21B6,#1D4ED8);">
+          <tr>
+            <th style="width:26%;">المهارة</th>
+            <th style="text-align:center;width:9%;">ضعيف<br>١</th>
+            <th style="text-align:center;width:9%;">مقبول<br>٢</th>
+            <th style="text-align:center;width:9%;">جيد<br>٣</th>
+            <th style="text-align:center;width:9%;">جيد جداً<br>٤</th>
+            <th style="text-align:center;width:9%;">ممتاز<br>٥</th>
+            <th>ما أحتاج تحسينه في هذه المهارة</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:var(--blue);">🎧 الاستماع (Listening)</strong></td>
+            <td style="text-align:center;"><input type="radio" name="r-listening" value="1"></td>
+            <td style="text-align:center;"><input type="radio" name="r-listening" value="2"></td>
+            <td style="text-align:center;"><input type="radio" name="r-listening" value="3"></td>
+            <td style="text-align:center;"><input type="radio" name="r-listening" value="4"></td>
+            <td style="text-align:center;"><input type="radio" name="r-listening" value="5"></td>
+            <td><input id="imp-listening" style="border:none;border-bottom:1px solid #E2E8F0;width:100%;font-size:11px;font-family:inherit;padding:2px 4px;background:transparent;" placeholder="اكتبي هنا..."></td>
+          </tr>
+          <tr style="background:#FAFAFA;">
+            <td><strong style="color:var(--teal);">🗣 التحدث (Speaking)</strong></td>
+            <td style="text-align:center;"><input type="radio" name="r-speaking" value="1"></td>
+            <td style="text-align:center;"><input type="radio" name="r-speaking" value="2"></td>
+            <td style="text-align:center;"><input type="radio" name="r-speaking" value="3"></td>
+            <td style="text-align:center;"><input type="radio" name="r-speaking" value="4"></td>
+            <td style="text-align:center;"><input type="radio" name="r-speaking" value="5"></td>
+            <td><input id="imp-speaking" style="border:none;border-bottom:1px solid #E2E8F0;width:100%;font-size:11px;font-family:inherit;padding:2px 4px;background:transparent;" placeholder="اكتبي هنا..."></td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--amber);">📖 القواعد (Grammar)</strong></td>
+            <td style="text-align:center;"><input type="radio" name="r-grammar" value="1"></td>
+            <td style="text-align:center;"><input type="radio" name="r-grammar" value="2"></td>
+            <td style="text-align:center;"><input type="radio" name="r-grammar" value="3"></td>
+            <td style="text-align:center;"><input type="radio" name="r-grammar" value="4"></td>
+            <td style="text-align:center;"><input type="radio" name="r-grammar" value="5"></td>
+            <td><input id="imp-grammar" style="border:none;border-bottom:1px solid #E2E8F0;width:100%;font-size:11px;font-family:inherit;padding:2px 4px;background:transparent;" placeholder="اكتبي هنا..."></td>
+          </tr>
+          <tr style="background:#FAFAFA;">
+            <td><strong style="color:var(--mint);">✍️ الكتابة (Writing)</strong></td>
+            <td style="text-align:center;"><input type="radio" name="r-writing" value="1"></td>
+            <td style="text-align:center;"><input type="radio" name="r-writing" value="2"></td>
+            <td style="text-align:center;"><input type="radio" name="r-writing" value="3"></td>
+            <td style="text-align:center;"><input type="radio" name="r-writing" value="4"></td>
+            <td style="text-align:center;"><input type="radio" name="r-writing" value="5"></td>
+            <td><input id="imp-writing" style="border:none;border-bottom:1px solid #E2E8F0;width:100%;font-size:11px;font-family:inherit;padding:2px 4px;background:transparent;" placeholder="اكتبي هنا..."></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- القسم الثاني: الأداء العام -->
+    <div style="font-size:11.5px;font-weight:700;color:white;margin-bottom:8px;padding:6px 10px;background:linear-gradient(90deg,var(--teal),var(--mint));border-radius:8px;">
+      القسم الثاني: تقييم الأداء العام
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+      <div style="background:var(--mist);border-radius:10px;padding:10px;">
+        <div style="font-size:11px;font-weight:700;color:var(--teal);margin-bottom:7px;">🙋 المشاركة الصفية</div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="r-part" value="ضعيفة"> ضعيفة</label>
+          <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="r-part" value="متوسطة"> متوسطة</label>
+          <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="r-part" value="جيدة"> جيدة</label>
+          <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="r-part" value="ممتازة"> ممتازة</label>
+        </div>
+      </div>
+      <div style="background:var(--mist);border-radius:10px;padding:10px;">
+        <div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:7px;">📚 الواجبات المنزلية</div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="r-hw" value="لم أسلّم"> لم أسلّم</label>
+          <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="r-hw" value="أحياناً"> أحياناً</label>
+          <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="r-hw" value="منتظمة"> منتظمة</label>
+          <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="r-hw" value="دائماً مع الجودة"> دائماً مع الجودة</label>
+        </div>
+      </div>
+      <div style="background:var(--mist);border-radius:10px;padding:10px;">
+        <div style="font-size:11px;font-weight:700;color:var(--violet);margin-bottom:7px;">🏗 المشاريع</div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="r-proj" value="لم أشارك"> لم أشارك</label>
+          <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="r-proj" value="مشاركة جزئية"> مشاركة جزئية</label>
+          <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="r-proj" value="مشاركة كاملة"> مشاركة كاملة</label>
+          <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="radio" name="r-proj" value="قيادة متميزة"> قيادة متميزة</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- القسم الثالث: التأمل الذاتي -->
+    <div style="font-size:11.5px;font-weight:700;color:white;margin-bottom:8px;padding:6px 10px;background:linear-gradient(90deg,var(--rose),var(--amber));border-radius:8px;">
+      القسم الثالث: التأمل الذاتي
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+      <div style="background:#FEF2F2;border-radius:10px;padding:11px;border-top:3px solid var(--rose);">
+        <div style="font-size:11px;font-weight:700;color:var(--rose);margin-bottom:6px;">⚠️ نقاط الضعف التي أحتاج فيها مساعدة المعلمة</div>
+        <textarea id="ref-weak" style="width:100%;min-height:64px;border:1px solid #FECACA;border-radius:7px;padding:6px 8px;font-size:11px;font-family:inherit;resize:none;background:white;" placeholder="اكتبي بصدق ما تجدين فيه صعوبة وتحتاجين دعم المعلمة..."></textarea>
+      </div>
+      <div style="background:#F0FDF4;border-radius:10px;padding:11px;border-top:3px solid var(--mint);">
+        <div style="font-size:11px;font-weight:700;color:var(--mint);margin-bottom:6px;">🏆 أفضل إنجاز أكاديمي لي في هذه الوحدة</div>
+        <textarea id="ref-best" style="width:100%;min-height:64px;border:1px solid #BBF7D0;border-radius:7px;padding:6px 8px;font-size:11px;font-family:inherit;resize:none;background:white;" placeholder="اكتبي أفضل شيء أنجزتِه أو تعلمتِه في هذه الوحدة..."></textarea>
+      </div>
+      <div style="background:#EFF6FF;border-radius:10px;padding:11px;border-top:3px solid var(--blue);">
+        <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:6px;">📅 خطة التحسين خلال أسبوعين</div>
+        <textarea id="ref-plan" style="width:100%;min-height:64px;border:1px solid #BFDBFE;border-radius:7px;padding:6px 8px;font-size:11px;font-family:inherit;resize:none;background:white;" placeholder="اكتبي هدفاً واحداً واضحاً قابلاً للقياس خلال الأسبوعين القادمين..."></textarea>
+      </div>
+    </div>
+
+    <!-- توقيع -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px dashed #CBD5E1;">
+      <div style="font-size:10px;color:var(--slate);">توقيع الطالبة: ____________________</div>
+      <div style="font-size:10px;color:var(--slate);">اطلعت عليه المعلمة: ____________________</div>
+      <div style="font-size:10px;color:var(--slate);">تاريخ المراجعة مع المعلمة: ____________________</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 3.3 — منظومة الاختبارات ═══ -->
+<div class="slide s-light" id="s14">
+  <div class="sh">
+    <div class="sh-icon" style="background:#F5F3FF; color:var(--violet);">📝</div>
+    <div>
+      <div class="sh-tag" style="color:var(--violet);">المرحلة الثالثة · ٣.٣</div>
+      <div class="sh-title">منظومة الاختبارات التشكيلية والختامية</div>
+    </div>
+  </div>
+  <div style="overflow:hidden; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,0.08); margin-bottom:14px;">
+    <table class="ftable">
+      <thead style="background:linear-gradient(135deg,var(--violet),var(--blue));">
+        <tr>
+          <th>نوع الاختبار</th>
+          <th>التوقيت</th>
+          <th>الغرض</th>
+          <th>الأداة</th>
+          <th>القرار بناءً عليه</th>
+        </tr>
+      </thead>
+      <tbody style="background:white;">
+        <tr><td><span class="badge" style="background:#EFF6FF;color:var(--blue);">اختبار قبلي</span></td><td>بداية الخطة</td><td>تحديد نقطة الانطلاق</td><td>ورقة موحدة</td><td>تصنيف المستوى</td></tr>
+        <tr><td><span class="badge" style="background:#F0FDFA;color:var(--teal);">بطاقة الخروج</span></td><td>نهاية كل حصة</td><td>رصد الفهم اللحظي</td><td>Google Forms</td><td>تعديل الحصة التالية</td></tr>
+        <tr><td><span class="badge" style="background:#FFFBEB;color:var(--amber);">اختبار أسبوعي قصير</span></td><td>أسبوعياً</td><td>مراجعة وتثبيت</td><td>Quizizz</td><td>إعادة التدريس الموجّه</td></tr>
+        <tr><td><span class="badge" style="background:#F5F0FF;color:var(--violet);">نشاط تفاعلي</span></td><td>كل حصتين</td><td>تعزيز التركيز والمتعة</td><td>Wordwall</td><td>رصد المشاركة والتفاعل</td></tr>
+        <tr><td><span class="badge" style="background:#FFF5F5;color:var(--rose);">اختبار نصف المسار</span></td><td>الأسبوع ٣</td><td>تقييم مرحلي</td><td>ورقة + رقمي</td><td>تعديل الخطة الفردية</td></tr>
+        <tr><td><span class="badge" style="background:#FEF2F2;color:var(--rose);">اختبار بعدي</span></td><td>نهاية الأسبوع ٦</td><td>قياس الأثر الكلي</td><td>ورقة موحدة</td><td>حساب نسبة التحسن</td></tr>
+        <tr><td><span class="badge" style="background:#F0FDF4;color:var(--mint);">اختبار الاستدامة</span></td><td>بعد شهر</td><td>تتبع نقل التعلم</td><td>ورقة موحدة</td><td>قياس Cohen's d</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-h">📱 الأدوات الرقمية المعتمدة</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
+      <div style="padding:8px 14px;background:#F5F0FF;border-radius:10px;font-size:12px;font-weight:600;color:var(--violet);">🎯 Quizizz — اختبارات تنافسية متزامنة وغير متزامنة</div>
+      <div style="padding:8px 14px;background:#FFF5E0;border-radius:10px;font-size:12px;font-weight:600;color:var(--amber);">🎮 Wordwall — ألعاب تعليمية وأنشطة تفاعلية</div>
+      <div style="padding:8px 14px;background:#F0FDFA;border-radius:10px;font-size:12px;font-weight:600;color:var(--teal);">📝 Google Forms — بطاقات الخروج والاستبيانات</div>
+      <div style="padding:8px 14px;background:#EFF6FF;border-radius:10px;font-size:12px;font-weight:600;color:var(--blue);">🔄 نموذج التقييم الذاتي — الشريحة السابقة</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PHASE 4 HEADER ═══ -->
+<div class="slide s-phase" id="s15" style="background:radial-gradient(ellipse at 40% 40%, #4A2000 0%, #0A0F1E 65%);">
+  <div class="ph-num">٤</div>
+  <div class="ph-icon">🤝</div>
+  <div class="ph-badge" style="background:rgba(217,119,6,.2); color:#FCD34D; border:1px solid rgba(217,119,6,.4);">المرحلة الرابعة</div>
+  <div class="ph-title">الدعم والمساندة</div>
+  <div class="ph-desc">الشؤون الطلابية — التوجيه الطلابي — الشراكة الأسرية — الدعم النفسي المؤسسي</div>
+</div>
+
+<!-- ═══ 4.1 — منظومة الدعم ═══ -->
+<div class="slide s-light" id="s16">
+  <div class="sh">
+    <div class="sh-icon" style="background:#FFFBEB; color:var(--amber);">🤝</div>
+    <div>
+      <div class="sh-tag" style="color:var(--amber);">المرحلة الرابعة · ٤.١</div>
+      <div class="sh-title">منظومة الدعم والمساندة المتكاملة</div>
+    </div>
+  </div>
+  <div class="g2" style="margin-bottom:14px;">
+    <div class="card" style="border-top:3px solid var(--teal);">
+      <div class="card-h" style="color:var(--teal);">🏫 الشؤون الطلابية</div>
+      <div class="li"><div class="li-dot"></div><div class="li-t">رصد الغيابات والمتراجعات أسبوعياً</div></div>
+      <div class="li"><div class="li-dot"></div><div class="li-t">إشعار المعلمة فور اكتشاف الانتكاس</div></div>
+      <div class="li"><div class="li-dot"></div><div class="li-t">ضمان حضور جلسات الدعم الفردي</div></div>
+      <div class="li"><div class="li-dot"></div><div class="li-t">التنسيق مع ولي الأمر عند الحاجة</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--violet);">
+      <div class="card-h" style="color:var(--violet);">🧠 التوجيه الطلابي (المرشدة)</div>
+      <div class="li"><div class="li-dot" style="background:var(--violet)"></div><div class="li-t">جلسة دعم نفسي فردية للحالات الحرجة</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--violet)"></div><div class="li-t">برنامج إدارة التوتر وقلق الاختبارات</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--violet)"></div><div class="li-t">تعزيز الكفاءة الذاتية والثقة بالنفس</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--violet)"></div><div class="li-t">جلسات جماعية شهرية لتنظيم الوقت</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--amber);">
+      <div class="card-h" style="color:var(--amber);">👨‍👩‍👧 الشراكة الأسرية</div>
+      <div class="li"><div class="li-dot" style="background:var(--amber)"></div><div class="li-t">رسالة شهرية: نقطة قوة + تحسين + طلب</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--amber)"></div><div class="li-t">لقاء فصلي: ولي أمر + معلمة + مرشدة</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--amber)"></div><div class="li-t">نشرة توعوية عن البيئة المنزلية الداعمة</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--amber)"></div><div class="li-t">مجموعة واتساب مدرسية للمتابعة</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--mint);">
+      <div class="card-h" style="color:var(--mint);">👩‍🎓 دعم الأقران</div>
+      <div class="li"><div class="li-dot" style="background:var(--mint)"></div><div class="li-t">برنامج الإرشاد من الأقران (Peer Tutoring)</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--mint)"></div><div class="li-t">اختيار الطالبة المتميزة لمساعدة أقرانها</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--mint)"></div><div class="li-t">جلسات مجموعة صغيرة أسبوعية</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--mint)"></div><div class="li-t">مكافأة الطالبة المرشدة والمتلقّية معاً</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 4.2 — بروتوكول الدعم ═══ -->
+<div class="slide s-light" id="s17">
+  <div class="sh">
+    <div class="sh-icon" style="background:#FFFBEB; color:var(--amber);">📋</div>
+    <div>
+      <div class="sh-tag" style="color:var(--amber);">المرحلة الرابعة · ٤.٢</div>
+      <div class="sh-title">بروتوكول التدخل الفوري — من يتصرف ومتى؟</div>
+    </div>
+  </div>
+  <div style="overflow:hidden; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+    <table class="ftable">
+      <thead style="background:linear-gradient(135deg,var(--amber),#F97316);">
+        <tr><th>المؤشر التحذيري</th><th>الجهة المسؤولة</th><th>التدخل المطلوب</th><th>المهلة الزمنية</th></tr>
+      </thead>
+      <tbody style="background:white;">
+        <tr><td>انخفاض الدرجة عن ٥٠٪ في اختبار أسبوعي</td><td>المعلمة</td><td>جلسة دعم فردي فورية</td><td>خلال ٢٤ ساعة</td></tr>
+        <tr><td>غياب ٣ أيام متتالية</td><td>الشؤون الطلابية</td><td>التواصل مع ولي الأمر + المرشدة</td><td>خلال يوم واحد</td></tr>
+        <tr><td>عدم تحسن بعد أسبوعين من التدخل</td><td>المعلمة + المرشدة</td><td>مراجعة الخطة الفردية وتعديلها</td><td>خلال أسبوع</td></tr>
+        <tr><td>بكاء أو اضطراب نفسي ظاهر</td><td>المرشدة الطلابية</td><td>جلسة إرشادية طارئة + إشعار الأسرة</td><td>فوري — نفس اليوم</td></tr>
+        <tr><td>تراجع بعد تحسن مسبق (انتكاس)</td><td>فريق الدعم الثلاثي</td><td>اجتماع طارئ + خطة تعافٍ جديدة</td><td>خلال ٤٨ ساعة</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ PHASE 5 HEADER ═══ -->
+<div class="slide s-phase" id="s18" style="background:radial-gradient(ellipse at 40% 40%, #022C22 0%, #0A0F1E 65%);">
+  <div class="ph-num">٥</div>
+  <div class="ph-icon">📋</div>
+  <div class="ph-badge" style="background:rgba(5,150,105,.2); color:#6EE7B7; border:1px solid rgba(5,150,105,.4);">المرحلة الخامسة</div>
+  <div class="ph-title">استمارات متابعة التحسن</div>
+  <div class="ph-desc">توثيق الرحلة — استمارة الطالبة أسبوعياً — استمارة المعلمة — استمارة ولي الأمر</div>
+</div>
+
+<!-- ═══ 5.1 — استمارة الطالبة ═══ -->
+<div class="slide s-light" id="s19">
+  <div class="sh">
+    <div class="sh-icon" style="background:#F0FDF4; color:var(--mint);">📝</div>
+    <div>
+      <div class="sh-tag" style="color:var(--mint);">المرحلة الخامسة · ٥.١</div>
+      <div class="sh-title">استمارات المتابعة — الطالبة والمعلمة</div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="form-box">
+      <div class="form-title" style="border-color:var(--mint);">📝 استمارة الطالبة الأسبوعية</div>
+      <div class="form-row"><div class="form-label">الأسبوع رقم</div><input class="form-field" placeholder="١ / ٢ / ..."></div>
+      <div class="form-row"><div class="form-label">ما الذي تعلمته هذا الأسبوع؟</div></div>
+      <div style="background:var(--mist); border-radius:8px; padding:8px 10px; margin:4px 0 8px; font-size:12px; color:#94A3B8; min-height:36px;">_______________</div>
+      <div class="form-row"><div class="form-label">أين شعرت بصعوبة؟</div></div>
+      <div style="background:var(--mist); border-radius:8px; padding:8px 10px; margin:4px 0 8px; font-size:12px; color:#94A3B8; min-height:36px;">_______________</div>
+      <div class="form-row"><div class="form-label">تقييمي لمستوى جهدي هذا الأسبوع</div>
+        <div class="form-check"><span>⭐</span><span>⭐⭐</span><span>⭐⭐⭐</span><span>⭐⭐⭐⭐</span><span>⭐⭐⭐⭐⭐</span></div>
+      </div>
+      <div class="form-row"><div class="form-label">درجة الاختبار الأسبوعي</div><input class="form-field" placeholder="/ ١٠"></div>
+      <div class="form-row"><div class="form-label">هدفي للأسبوع القادم</div></div>
+      <div style="background:var(--mist); border-radius:8px; padding:8px 10px; margin:4px 0; font-size:12px; color:#94A3B8; min-height:36px;">_______________</div>
+    </div>
+    <div class="form-box">
+      <div class="form-title" style="border-color:var(--teal);">📊 استمارة المعلمة الأسبوعية</div>
+      <div class="form-row"><div class="form-label">اسم الطالبة</div><input class="form-field" style="width:100%;"></div>
+      <div class="form-row"><div class="form-label">درجة الاختبار القصير</div><input class="form-field" placeholder="/ ١٠"></div>
+      <div class="form-row"><div class="form-label">مستوى المشاركة الصفية</div>
+        <div class="form-check"><span>ضعيف</span><span>متوسط</span><span>جيد</span><span>ممتاز</span></div>
+      </div>
+      <div class="form-row"><div class="form-label">تسليم بطاقة الخروج</div>
+        <div class="form-check"><span>نعم</span><span>لا</span></div>
+      </div>
+      <div class="form-row"><div class="form-label">الاستراتيجية المستخدمة</div>
+        <div class="form-check"><span>تقييم ذاتي</span><span>Quizizz</span><span>تعاوني</span></div>
+      </div>
+      <div class="form-row"><div class="form-label">ملاحظة المعلمة</div></div>
+      <div style="background:var(--mist); border-radius:8px; padding:8px 10px; margin:4px 0; font-size:12px; color:#94A3B8; min-height:36px;">_______________</div>
+      <div class="form-row"><div class="form-label">هل تحتاج إحالة للمرشدة؟</div>
+        <div class="form-check"><span>نعم</span><span>لا</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 5.2 — مؤشرات التقدم ═══ -->
+<div class="slide s-light" id="s20">
+  <div class="sh">
+    <div class="sh-icon" style="background:#F0FDF4; color:var(--mint);">📈</div>
+    <div>
+      <div class="sh-tag" style="color:var(--mint);">المرحلة الخامسة · ٥.٢</div>
+      <div class="sh-title">لوحة مؤشرات التقدم — جدول المتابعة الأسبوعية</div>
+    </div>
+  </div>
+  <div style="overflow:hidden; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,0.08); margin-bottom:14px;">
+    <table class="ftable">
+      <thead style="background:linear-gradient(135deg,var(--mint),var(--teal));">
+        <tr><th>المؤشر</th><th>الأسبوع ١</th><th>الأسبوع ٢</th><th>الأسبوع ٣</th><th>الأسبوع ٤</th><th>الأسبوع ٥</th><th>الأسبوع ٦</th></tr>
+      </thead>
+      <tbody style="background:white; text-align:center;">
+        <tr><td style="text-align:right; font-weight:600;">درجة الاختبار الأسبوعي</td><td>____</td><td>____</td><td>____</td><td>____</td><td>____</td><td>____</td></tr>
+        <tr><td style="text-align:right; font-weight:600;">نسبة التسليم في الوقت</td><td>____</td><td>____</td><td>____</td><td>____</td><td>____</td><td>____</td></tr>
+        <tr><td style="text-align:right; font-weight:600;">مستوى المشاركة (١-٤)</td><td>____</td><td>____</td><td>____</td><td>____</td><td>____</td><td>____</td></tr>
+        <tr><td style="text-align:right; font-weight:600;">تقييم الطالبة لنفسها (١-٥)</td><td>____</td><td>____</td><td>____</td><td>____</td><td>____</td><td>____</td></tr>
+        <tr><td style="text-align:right; font-weight:600;">جلسة دعم نفسي (نعم/لا)</td><td>____</td><td>____</td><td>____</td><td>____</td><td>____</td><td>____</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-h">🚦 إشارات التنبه التلقائية</div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
+      <div style="padding:8px 14px; background:#FEF2F2; border-radius:10px; font-size:12px; font-weight:600; color:var(--rose);">🔴 درجتان متراجعتان متتاليتان</div>
+      <div style="padding:8px 14px; background:#FFFBEB; border-radius:10px; font-size:12px; font-weight:600; color:var(--amber);">🟡 ثبات الدرجة لأسبوعين</div>
+      <div style="padding:8px 14px; background:#F0FDF4; border-radius:10px; font-size:12px; font-weight:600; color:var(--mint);">🟢 تحسن مستمر ≥ ٥٪ أسبوعياً</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PHASE 6 HEADER ═══ -->
+<div class="slide s-phase" id="s21" style="background:radial-gradient(ellipse at 40% 40%, #450A0A 0%, #0A0F1E 65%);">
+  <div class="ph-num">٦</div>
+  <div class="ph-icon">📊</div>
+  <div class="ph-badge" style="background:rgba(220,38,38,.2); color:#FCA5A5; border:1px solid rgba(220,38,38,.4);">المرحلة السادسة</div>
+  <div class="ph-title">النتائج والتحليل وقياس الأثر</div>
+  <div class="ph-desc">نموذج كيركباتريك الرباعي — حجم الأثر (Cohen's d) — استدامة الأثر — قرار الاستمرارية</div>
+</div>
+
+<!-- ═══ 6.1 — نتائج التجربة ═══ -->
+<div class="slide s-light" id="s22">
+  <div class="sh">
+    <div class="sh-icon" style="background:#FEF2F2; color:var(--rose);">📈</div>
+    <div>
+      <div class="sh-tag" style="color:var(--rose);">المرحلة السادسة · ٦.١</div>
+      <div class="sh-title">نتائج التجربة — قبل وبعد والاستدامة</div>
+    </div>
+  </div>
+  <div class="g4" style="margin-bottom:16px;">
+    <div class="stat" style="border-color:var(--mint);"><div class="stat-n" style="color:var(--mint);">+٣٥٪</div><div class="stat-l">تحسن في المجموعة التجريبية</div></div>
+    <div class="stat" style="border-color:var(--slate);"><div class="stat-n" style="color:var(--slate);">+٦٪</div><div class="stat-l">تحسن في المجموعة الضابطة</div></div>
+    <div class="stat" style="border-color:var(--teal);"><div class="stat-n" style="color:var(--teal);">٩٦٪</div><div class="stat-l">رضا الطالبات — المستوى ١ كيركباتريك</div></div>
+    <div class="stat" style="border-color:var(--amber);"><div class="stat-n" style="color:var(--amber);">٨١</div><div class="stat-l">متوسط الدرجة بعد شهر (استدامة)</div></div>
+  </div>
+  <div class="impact-box">
+    <div style="font-size:13px; color:rgba(255,255,255,.55); margin-bottom:8px;">حجم الأثر — Cohen's d</div>
+    <div class="impact-num">1.42</div>
+    <div class="impact-lbl">أثر كبير جداً — يُثبت فاعلية التدخل الإجرائي</div>
+    <div style="margin-top:16px; font-size:12px; color:rgba(255,255,255,.4);">معيار التفسير: d &lt; 0.2 صغير · 0.2–0.5 متوسط · 0.5–0.8 كبير · &gt; 0.8 كبير جداً</div>
+  </div>
+</div>
+
+<!-- ═══ 6.2 — نموذج كيركباتريك ═══ -->
+<div class="slide s-light" id="s23">
+  <div class="sh">
+    <div class="sh-icon" style="background:#FEF2F2; color:var(--rose);">🎯</div>
+    <div>
+      <div class="sh-tag" style="color:var(--rose);">المرحلة السادسة · ٦.٢</div>
+      <div class="sh-title">نموذج كيركباتريك — قياس الأثر على أربعة مستويات</div>
+    </div>
+  </div>
+  <div class="g2" style="margin-bottom:14px;">
+    <div class="card" style="border-top:4px solid var(--blue);">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:16px;">١</div>
+        <div><div style="font-weight:700; color:var(--blue);">رد الفعل</div><div style="font-size:11px; color:var(--slate);">استبيان الرضا — فور انتهاء التدخل</div></div>
+      </div>
+      <div class="li"><div class="li-dot" style="background:var(--blue)"></div><div class="li-t">٩٦٪ رضا عن الأساليب الجديدة ✓</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--blue)"></div><div class="li-t">٩٢٪ يرغبن في الاستمرار بهذه الطريقة ✓</div></div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--teal);">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:16px;">٢</div>
+        <div><div style="font-weight:700; color:var(--teal);">التعلم</div><div style="font-size:11px; color:var(--slate);">اختبار بعدي موحّد — نهاية التجربة</div></div>
+      </div>
+      <div class="li"><div class="li-dot" style="background:var(--teal)"></div><div class="li-t">تحسن +٣٥٪ في المجموعة التجريبية ✓</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--teal)"></div><div class="li-t">تحسن +٦٪ فقط في المجموعة الضابطة</div></div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--violet);">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--violet);display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:16px;">٣</div>
+        <div><div style="font-weight:700; color:var(--violet);">السلوك</div><div style="font-size:11px; color:var(--slate);">ملاحظة ميدانية — بعد أسبوعين</div></div>
+      </div>
+      <div class="li"><div class="li-dot" style="background:var(--violet)"></div><div class="li-t">زيادة ملحوظة في المشاركة الصفية</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--violet)"></div><div class="li-t">انخفاض السلوك الانسحابي</div></div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--mint);">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:16px;">٤</div>
+        <div><div style="font-weight:700; color:var(--mint);">النتائج</div><div style="font-size:11px; color:var(--slate);">تحليل الدرجات النهائية — بعد شهر</div></div>
+      </div>
+      <div class="li"><div class="li-dot" style="background:var(--mint)"></div><div class="li-t">متوسط ٨١ — استدامة الأثر ✓</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--mint)"></div><div class="li-t">Cohen's d = 1.42 — أثر كبير جداً ✓</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 6.3 — التوصيات والخلاصة ═══ -->
+<div class="slide s-light" id="s24">
+  <div class="sh">
+    <div class="sh-icon" style="background:#FEF2F2; color:var(--rose);">💡</div>
+    <div>
+      <div class="sh-tag" style="color:var(--rose);">المرحلة السادسة · ٦.٣</div>
+      <div class="sh-title">التوصيات بناءً على النتائج</div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card" style="border-top:3px solid var(--teal);">
+      <div class="card-h" style="color:var(--teal);">للمعلمة ← الصف</div>
+      <div class="li"><div class="li-dot"></div><div class="li-t">تبني التقييم الذاتي المعكوس في كل وحدة</div></div>
+      <div class="li"><div class="li-dot"></div><div class="li-t">تقديم بطاقة الخروج في كل حصة</div></div>
+      <div class="li"><div class="li-dot"></div><div class="li-t">اختبار Quizizz / Wordwall أسبوعي ثابت</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue);">
+      <div class="card-h" style="color:var(--blue);">للإدارة ← المؤسسة</div>
+      <div class="li"><div class="li-dot" style="background:var(--blue)"></div><div class="li-t">تعميم البرنامج على جميع المواد</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--blue)"></div><div class="li-t">تطوير نظام رصد رقمي للمؤشرات</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--blue)"></div><div class="li-t">تدريب المعلمات على الأدوات التفاعلية</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--amber);">
+      <div class="card-h" style="color:var(--amber);">للأسرة ← المنزل</div>
+      <div class="li"><div class="li-dot" style="background:var(--amber)"></div><div class="li-t">متابعة التقارير الأسبوعية</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--amber)"></div><div class="li-t">توفير بيئة مناسبة للدراسة</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--amber)"></div><div class="li-t">التشجيع والدعم العاطفي المستمر</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--violet);">
+      <div class="card-h" style="color:var(--violet);">للمرشدة ← الدعم النفسي</div>
+      <div class="li"><div class="li-dot" style="background:var(--violet)"></div><div class="li-t">برنامج ثقة بالنفس مؤسسي</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--violet)"></div><div class="li-t">جلسات جماعية لإدارة القلق</div></div>
+      <div class="li"><div class="li-dot" style="background:var(--violet)"></div><div class="li-t">تتبع الحالات الحرجة شهرياً</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CLOSING ═══ -->
+<div class="slide s-phase" id="s25" style="background:radial-gradient(ellipse at 50% 40%, #0F2744 0%, #0A0F1E 60%); text-align:center;">
+  <div style="font-size:10px; font-weight:700; letter-spacing:.12em; color:var(--gold); margin-bottom:20px;">الخلاصة</div>
+  <div style="font-family:'Tajawal',sans-serif; font-size:clamp(22px,3.5vw,40px); font-weight:900; margin-bottom:20px; line-height:1.3;">
+    منهجية متكاملة — أثر موثّق<br>
+    <span style="font-size:clamp(14px,2vw,20px); color:var(--gold);">من التشخيص إلى قياس الأثر</span>
+  </div>
+  <div style="display:flex; justify-content:center; gap:32px; margin-bottom:32px; flex-wrap:wrap;">
+    <div style="text-align:center;"><div style="font-family:'Tajawal'; font-size:42px; font-weight:900; color:var(--gold);">1.42</div><div style="font-size:11px; color:rgba(255,255,255,.45);">Cohen's d</div></div>
+    <div style="text-align:center;"><div style="font-family:'Tajawal'; font-size:42px; font-weight:900; color:var(--gold);">+٣٥٪</div><div style="font-size:11px; color:rgba(255,255,255,.45);">تحسن تجريبي</div></div>
+    <div style="text-align:center;"><div style="font-family:'Tajawal'; font-size:42px; font-weight:900; color:var(--gold);">٩٦٪</div><div style="font-size:11px; color:rgba(255,255,255,.45);">رضا الطالبات</div></div>
+    <div style="text-align:center;"><div style="font-family:'Tajawal'; font-size:42px; font-weight:900; color:var(--gold);">٦</div><div style="font-size:11px; color:rgba(255,255,255,.45);">مراحل متسلسلة</div></div>
+  </div>
+  <div style="max-width:520px; font-size:13px; color:rgba(255,255,255,.55); line-height:1.9; margin:0 auto 28px;">
+    تتشابك عوامل متعددة وراء التدني — التشتت والتسويف وقلق الاختبارات هي الأعلى تأثيراً.
+    الحلول الناجعة تستوجب تكاملاً بين المعلمة والإدارة والأسرة والدعم النفسي.
+    الاتساق الصغير يومياً أقوى من البرامج الكثيفة المتقطعة.
+  </div>
+  <div style="font-size:11px; color:rgba(255,255,255,.25);">
+    إعداد: الجوهرة رازن · إشراف: سلطانة الدويش · ثانوية ١٣٤ — الرياض — الفصل الثاني ١٤٤٧هـ
+  </div>
+</div>
+
+</div><!-- end #stage -->
+
+<!-- DOTS -->
+<div id="botbar"></div>
+
+<script>
+const TOTAL = 26;
+let cur = 0;
+
+const slides = document.querySelectorAll('.slide');
+const pgfill = document.getElementById('pgfill');
+const ctr = document.getElementById('ctr');
+const bprev = document.getElementById('bprev');
+const bnext = document.getElementById('bnext');
+const botbar = document.getElementById('botbar');
+const roadmap = document.getElementById('roadmap');
+
+// Arabic numerals
+const toAr = n => n.toString().replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+
+// Build dots
+for(let i=0;i<TOTAL;i++){
+  const d=document.createElement('div');
+  d.className='dot'+(i===0?' active':'');
+  d.onclick=()=>goTo(i);
+  botbar.appendChild(d);
+}
+
+// Build roadmap
+const phases = [
+  { label:'الغلاف', slide:0, subs:[] },
+  { label:'خريطة المنهجية', slide:1, subs:[] },
+  { label:'البحث والتحليل', slide:2, subs:[
+    {label:'منهجية البحث', slide:3},
+    {label:'نتائج التشخيص', slide:4},
+    {label:'العوامل الرباعية', slide:5},
+  ]},
+  { label:'الخطة العلاجية والإثرائية', slide:6, subs:[
+    {label:'مكونات الخطة الفردية', slide:7},
+    {label:'نموذج الخطة', slide:8},
+    {label:'تصنيف الطالبات', slide:9},
+    {label:'الجدول الزمني', slide:10},
+  ]},
+  { label:'آلية التنفيذ وأدواته', slide:11, subs:[
+    {label:'التقييم المعكوس', slide:12},
+    {label:'الاستراتيجيات والأدوات', slide:13},
+    {label:'منظومة الاختبارات', slide:14},
+  ]},
+  { label:'الدعم والمساندة', slide:15, subs:[
+    {label:'منظومة الدعم', slide:16},
+    {label:'بروتوكول التدخل الفوري', slide:17},
+  ]},
+  { label:'استمارات متابعة التحسن', slide:18, subs:[
+    {label:'استمارة الطالبة والمعلمة', slide:19},
+    {label:'لوحة مؤشرات التقدم', slide:20},
+  ]},
+  { label:'النتائج والتحليل وقياس الأثر', slide:21, subs:[
+    {label:'نتائج التجربة', slide:22},
+    {label:'نموذج كيركباتريك', slide:23},
+    {label:'التوصيات', slide:24},
+  ]},
+  { label:'الخلاصة', slide:25, subs:[] },
+];
+
+const colors=['#1D4ED8','#1D4ED8','#1D4ED8','#0891B2','#7C3AED','#D97706','#059669','#DC2626','#DC2626'];
+const rm = document.getElementById('roadmap');
+phases.forEach((ph,pi)=>{
+  const div=document.createElement('div');
+  div.className='rm-phase';
+  div.dataset.slide=ph.slide;
+  div.innerHTML=`<div class="rm-dot" style="background:${colors[pi] || '#888'}">${toAr(pi)}</div><div class="rm-info"><div class="rm-num">الشريحة ${toAr(ph.slide+1)}</div><div class="rm-label">${ph.label}</div></div>`;
+  div.onclick=()=>goTo(ph.slide);
+  rm.appendChild(div);
+  if(ph.subs.length){
+    const subs=document.createElement('div');
+    subs.className='rm-subs';
+    ph.subs.forEach(s=>{
+      const sd=document.createElement('div');
+      sd.className='rm-sub';
+      sd.dataset.slide=s.slide;
+      sd.textContent=s.label;
+      sd.onclick=e=>{e.stopPropagation();goTo(s.slide);};
+      subs.appendChild(sd);
+    });
+    rm.appendChild(subs);
+  }
+});
+
+function updateRM(){
+  rm.querySelectorAll('.rm-phase').forEach(el=>{
+    el.classList.toggle('active', parseInt(el.dataset.slide)===cur);
+  });
+  rm.querySelectorAll('.rm-sub').forEach(el=>{
+    el.classList.toggle('active', parseInt(el.dataset.slide)===cur);
+  });
+}
+
+function goTo(n){
+  if(n===cur||n<0||n>=TOTAL) return;
+  slides[cur].classList.remove('active');
+  slides[cur].classList.add('out');
+  setTimeout(()=>slides[n<cur?n+1:n-1]?.classList.remove('out'),400);
+  cur=n;
+  slides[cur].classList.add('active');
+  updateUI();
+}
+
+function updateUI(){
+  pgfill.style.width=((cur+1)/TOTAL*100)+'%';
+  ctr.textContent=`${toAr(cur+1)} / ${toAr(TOTAL)}`;
+  bprev.disabled=cur===0;
+  bnext.disabled=cur===TOTAL-1;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+  updateRM();
+  animateBars();
+}
+
+function animateBars(){
+  slides[cur].querySelectorAll('.bar-fill').forEach(b=>{
+    const p=b.dataset.p;
+    b.style.width='0';
+    setTimeout(()=>{b.style.width=p+'%';},80);
+  });
+}
+
+let menuOpen=false;
+document.getElementById('mapbtn').onclick=()=>{
+  menuOpen=!menuOpen;
+  roadmap.classList.toggle('open',menuOpen);
+};
+document.getElementById('stage').addEventListener('click',()=>{if(menuOpen){menuOpen=false;roadmap.classList.remove('open');}});
+bprev.onclick=()=>goTo(cur-1);
+bnext.onclick=()=>goTo(cur+1);
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft'||e.key==='ArrowDown') goTo(cur+1);
+  if(e.key==='ArrowRight'||e.key==='ArrowUp') goTo(cur-1);
+  if(e.key==='Escape'&&menuOpen){menuOpen=false;roadmap.classList.remove('open');}
+});
+
+let tx=0;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>50) goTo(dx<0?cur+1:cur-1);
+},{passive:true});
+
+updateUI();
+
+// ── DOWNLOAD FULL FILE ──
+function downloadFile() {
+  const html = document.documentElement.outerHTML;
+  const blob = new Blob([html], {type: 'text/html;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'بحث_إجرائي_تقصي_التدني_ثانوية134.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ── PDF / PRINT DOWNLOAD ──
+function downloadForm() {
+  const name = document.getElementById('f-name')?.value || 'الطالبة';
+  const unit = document.getElementById('f-unit')?.value || 'الوحدة';
+  const date = document.getElementById('f-date')?.value || new Date().toLocaleDateString('ar-SA');
+
+  const getR = n => { const el = document.querySelector(`input[name="${n}"]:checked`); return el ? el.value : '—'; };
+  const getT = id => { const el = document.getElementById(id); return el?.value || '—'; };
+  const stars = n => '★'.repeat(parseInt(n)||0) + '☆'.repeat(5-(parseInt(n)||0));
+
+  const skills = [
+    { ar:'🎧 الاستماع (Listening)', rname:'r-listening', imp:'imp-listening', c:'#1D4ED8' },
+    { ar:'🗣 التحدث (Speaking)',    rname:'r-speaking',  imp:'imp-speaking',  c:'#0891B2' },
+    { ar:'📖 القواعد (Grammar)',    rname:'r-grammar',   imp:'imp-grammar',   c:'#D97706' },
+    { ar:'✍️ الكتابة (Writing)',    rname:'r-writing',   imp:'imp-writing',   c:'#059669' },
+  ];
+
+  const skillRows = skills.map(s=>`
+    <tr>
+      <td style="font-weight:600;color:${s.c};padding:8px 12px;border-bottom:1px solid #E2E8F0;">${s.ar}</td>
+      <td style="text-align:center;padding:8px 12px;border-bottom:1px solid #E2E8F0;font-size:17px;color:${s.c};letter-spacing:1px;">${stars(getR(s.rname))}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #E2E8F0;color:#475569;font-size:12px;">${getT(s.imp)}</td>
+    </tr>`).join('');
+
+  const html = `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>نموذج التقييم الذاتي — ${name}</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:#fff;color:#111;direction:rtl;padding:24px 32px;font-size:13px;line-height:1.5}
+h1{font-size:16px;font-weight:700;color:#5B21B6;margin-bottom:3px}
+.meta{font-size:11px;color:#6B7280;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #E2E8F0}
+.sec{font-size:11.5px;font-weight:700;color:white;padding:5px 12px;border-radius:6px;margin:14px 0 8px;display:block}
+table{width:100%;border-collapse:collapse}
+th{padding:8px 12px;font-size:11px;font-weight:700;color:white;text-align:right}
+.pg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+.pb{border-radius:9px;padding:11px}
+.pl{font-size:10px;font-weight:700;margin-bottom:4px}
+.pv{font-size:13px;font-weight:700}
+.rg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.rb{border-radius:9px;padding:12px}
+.rl{font-size:10px;font-weight:700;margin-bottom:5px}
+.rv{font-size:12px;color:#374151;line-height:1.65;min-height:48px;white-space:pre-wrap}
+.sig{display:flex;justify-content:space-between;margin-top:18px;padding-top:10px;border-top:1px dashed #CBD5E1;font-size:10px;color:#9CA3AF}
+@media print{body{padding:12px}@page{margin:.8cm;size:A4}}
+</style>
+</head>
+<body>
+<h1>🔄 نموذج التقييم الذاتي — اللغة الإنجليزية</h1>
+<div class="meta">الاسم: <strong>${name}</strong> &nbsp;|&nbsp; الوحدة: <strong>${unit}</strong> &nbsp;|&nbsp; التاريخ: <strong>${date}</strong> &nbsp;|&nbsp; ثانوية ١٣٤ للبنات</div>
+
+<span class="sec" style="background:linear-gradient(90deg,#5B21B6,#1D4ED8)">القسم الأول: تقييم مهارات اللغة الإنجليزية الأربع</span>
+<table>
+  <thead style="background:linear-gradient(135deg,#5B21B6,#1D4ED8)">
+    <tr><th style="width:28%">المهارة</th><th style="text-align:center;width:22%">التقييم</th><th>ما أحتاج تحسينه</th></tr>
+  </thead>
+  <tbody>${skillRows}</tbody>
+</table>
+
+<span class="sec" style="background:linear-gradient(90deg,#0891B2,#059669)">القسم الثاني: تقييم الأداء العام</span>
+<div class="pg">
+  <div class="pb" style="background:#F0FDFA"><div class="pl" style="color:#0891B2">🙋 المشاركة الصفية</div><div class="pv" style="color:#0891B2">${getR('r-part')}</div></div>
+  <div class="pb" style="background:#FFFBEB"><div class="pl" style="color:#D97706">📚 الواجبات المنزلية</div><div class="pv" style="color:#D97706">${getR('r-hw')}</div></div>
+  <div class="pb" style="background:#F5F0FF"><div class="pl" style="color:#7C3AED">🏗 المشاريع</div><div class="pv" style="color:#7C3AED">${getR('r-proj')}</div></div>
+</div>
+
+<span class="sec" style="background:linear-gradient(90deg,#DC2626,#D97706)">القسم الثالث: التأمل الذاتي</span>
+<div class="rg">
+  <div class="rb" style="background:#FEF2F2;border-top:3px solid #DC2626"><div class="rl" style="color:#DC2626">⚠️ نقاط الضعف — أحتاج مساعدة المعلمة</div><div class="rv">${getT('ref-weak')}</div></div>
+  <div class="rb" style="background:#F0FDF4;border-top:3px solid #059669"><div class="rl" style="color:#059669">🏆 أفضل إنجاز أكاديمي في هذه الوحدة</div><div class="rv">${getT('ref-best')}</div></div>
+  <div class="rb" style="background:#EFF6FF;border-top:3px solid #1D4ED8"><div class="rl" style="color:#1D4ED8">📅 خطة التحسين خلال أسبوعين</div><div class="rv">${getT('ref-plan')}</div></div>
+</div>
+
+<div class="sig">
+  <span>توقيع الطالبة: ____________________</span>
+  <span>اطلعت عليه المعلمة: ____________________</span>
+  <span>تاريخ المراجعة: ____________________</span>
+</div>
+<script>window.onload=()=>{window.print();}<\/script>
+</body></html>`;
+
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `تقييم_ذاتي_${name}_${unit}.html`.replace(/\s/g,'_');
+  a.click();
+}
+</script>
+</body>
+</html>
